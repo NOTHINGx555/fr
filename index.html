@@ -1,1 +1,258 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stylowy Odtwarzacz Wideo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(45deg, black, white);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
 
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .menu button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      background: black;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      text-transform: uppercase;
+    }
+
+    .menu button:hover {
+      background: white;
+      color: black;
+      transform: scale(1.1);
+    }
+
+    .menu button.active {
+      background: white;
+      color: black;
+      font-weight: bold;
+    }
+
+    .content {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+      text-align: center;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .input-section textarea, .input-section input {
+      width: 90%;
+      padding: 15px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      border: 2px solid white;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .input-section textarea:focus, .input-section input:focus {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-color: black;
+    }
+
+    .input-section button {
+      padding: 10px 25px;
+      border: none;
+      background: black;
+      color: white;
+      font-size: 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .input-section button:hover {
+      background: white;
+      color: black;
+    }
+
+    .video-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      max-width: 600px;
+      background: black;
+      border: 2px solid white;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-info {
+      color: white;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Stylowy Odtwarzacz</h1>
+  <div class="menu">
+    <button id="normalPlayerButton" class="active">Normal Player</button>
+    <button id="multiPlayerButton">Multi URL Player</button>
+  </div>
+
+  <!-- Normal Player -->
+  <div id="normalPlayer" class="content">
+    <div class="input-section">
+      <input type="text" id="normalUrl" placeholder="Wprowadź URL wideo..." />
+      <button onclick="loadNormalVideo()">Odtwórz</button>
+    </div>
+    <div class="video-container">
+      <div class="video-frame">
+        <iframe id="normalIframe" allow="autoplay; encrypted-media"></iframe>
+      </div>
+      <div id="normalUrlInfo" class="video-info"></div>
+    </div>
+  </div>
+
+  <!-- Multi URL Player -->
+  <div id="multiPlayer" class="content">
+    <div class="input-section">
+      <textarea id="multiUrls" placeholder="Wprowadź URL-e wideo, każdy w nowej linii..."></textarea>
+      <button onclick="loadMultiVideos()">Odtwórz Wszystkie</button>
+    </div>
+    <div id="multiVideoContainer" class="video-container"></div>
+  </div>
+
+  <script>
+    const normalPlayerButton = document.getElementById('normalPlayerButton');
+    const multiPlayerButton = document.getElementById('multiPlayerButton');
+    const normalPlayer = document.getElementById('normalPlayer');
+    const multiPlayer = document.getElementById('multiPlayer');
+    const normalIframe = document.getElementById('normalIframe');
+    const normalUrlInfo = document.getElementById('normalUrlInfo');
+    const multiVideoContainer = document.getElementById('multiVideoContainer');
+
+    // Funkcja sprawdzająca poprawność URL
+    function isValidPornhubUrl(url) {
+      const regex = /view_video\.php\?viewkey=([\w-]+)/;
+      return regex.test(url);
+    }
+
+    // Funkcja ładująca normalne wideo
+    function loadNormalVideo() {
+      const url = document.getElementById('normalUrl').value.trim();
+      if (isValidPornhubUrl(url)) {
+        const videoId = url.match(/view_video\.php\?viewkey=([\w-]+)/)[1];
+        normalIframe.src = `https://www.pornhub.com/embed/${videoId}?autoplay=1&mute=0`;
+        normalUrlInfo.textContent = `URL: ${url}`;
+      } else {
+        normalIframe.src = ''; // Reset iframe, gdy URL jest niepoprawny
+        alert("Niepoprawny URL!");
+      }
+    }
+
+    // Funkcja ładująca wiele wideo
+    function loadMultiVideos() {
+      const urls = document.getElementById('multiUrls').value.trim().split('\n');
+      multiVideoContainer.innerHTML = ''; // Czyści poprzednie wideo
+
+      urls.forEach((url, index) => {
+        if (isValidPornhubUrl(url)) {
+          const videoId = url.match(/view_video\.php\?viewkey=([\w-]+)/)[1];
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.pornhub.com/embed/${videoId}?autoplay=1&mute=0`;
+          iframe.allow = 'autoplay; encrypted-media';
+          iframe.classList.add('video-frame');
+          iframe.dataset.index = index; // Indeks dla identyfikacji
+          iframe.addEventListener('ended', playNextVideo); // Odtwarzanie kolejnego
+          const infoDiv = document.createElement('div');
+          infoDiv.classList.add('video-info');
+          infoDiv.textContent = `URL: ${url}`;
+          multiVideoContainer.appendChild(iframe);
+          multiVideoContainer.appendChild(infoDiv);
+        } else {
+          alert(`Niepoprawny URL na pozycji ${index + 1}!`);
+        }
+      });
+    }
+
+    // Funkcja odtwarzania kolejnego wideo
+    function playNextVideo(event) {
+      const currentIframe = event.target;
+      const currentIndex = parseInt(currentIframe.dataset.index);
+      const nextIframe = multiVideoContainer.querySelector(`iframe[data-index="${currentIndex + 1}"]`);
+      if (nextIframe) {
+        nextIframe.src += "&autoplay=1";
+      }
+    }
+
+    // Funkcja przełączania między trybem normalnym a multi URL
+    function togglePlayer(mode) {
+      if (mode === 'normal') {
+        normalPlayer.style.display = 'block';
+        multiPlayer.style.display = 'none';
+        normalPlayerButton.classList.add('active');
+        multiPlayerButton.classList.remove('active');
+      } else if (mode === 'multi') {
+        normalPlayer.style.display = 'none';
+        multiPlayer.style.display = 'block';
+        normalPlayerButton.classList.remove('active');
+        multiPlayerButton.classList.add('active');
+      }
+    }
+
+    // Przypisanie zdarzeń do przycisków
+    normalPlayerButton.addEventListener('click', () => togglePlayer('normal'));
+    multiPlayerButton.addEventListener('click', () => togglePlayer('multi'));
+
+    // Domyślnie pokazuje tryb normalny
+    togglePlayer('normal');
+  </script>
+
+</body>
+</html>
