@@ -148,7 +148,6 @@
 
       // Maksymalna liczba URL (limit 9999)
       if (urls.length > 9999) {
-        alert("Maksymalna liczba linków to 9999!");
         return;
       }
 
@@ -161,7 +160,6 @@
           iframe.classList.add('video-frame');
           multiVideoContainer.appendChild(iframe);
         } else {
-          alert(`Niepoprawny URL na pozycji ${index + 1}!`);
         }
       });
     }
