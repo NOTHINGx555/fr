@@ -149,6 +149,7 @@
 
   <script>
     const multiVideoContainer = document.getElementById('multiVideoContainer');
+    const textArea = document.getElementById('multiUrls');
 
     // Funkcja sprawdzająca poprawność URL
     function isValidPornhubUrl(url) {
@@ -158,8 +159,11 @@
 
     // Funkcja ładująca wiele wideo (bez limitu)
     function loadMultiVideos() {
-      const urls = document.getElementById('multiUrls').value.trim().split('\n');
+      const urls = textArea.value.trim().split('\n');
       multiVideoContainer.innerHTML = ''; // Czyści poprzednie wideo
+
+      // Zapisz URL w localStorage
+      localStorage.setItem('videoUrls', textArea.value);
 
       // Maksymalna liczba URL (limit 9999)
       if (urls.length > 9999) {
@@ -174,7 +178,6 @@
           iframe.allow = 'autoplay; encrypted-media';
           iframe.classList.add('video-frame');
           multiVideoContainer.appendChild(iframe);
-        } else {
         }
       });
     }
@@ -190,8 +193,6 @@
     }
 
     // Funkcja do zarządzania ukrywaniem/widocznością wideo przy edytowaniu tekstu
-    const textArea = document.getElementById('multiUrls');
-
     textArea.addEventListener('focus', () => {
       hideVideos(); // Ukrywa wideo, gdy użytkownik klika na pole tekstowe
     });
@@ -199,6 +200,15 @@
     textArea.addEventListener('blur', () => {
       showVideos(); // Pokazuje wideo, gdy użytkownik kończy edytowanie (kliknięcie poza textarea)
     });
+
+    // Ładowanie zapisanych URLi z localStorage po załadowaniu strony
+    window.onload = () => {
+      const savedUrls = localStorage.getItem('videoUrls');
+      if (savedUrls) {
+        textArea.value = savedUrls;
+        loadMultiVideos(); // Ładowanie wideo przy wczytaniu zapisanych URLi
+      }
+    };
 
   </script>
 
