@@ -1,203 +1,34 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔥💀🔥</title>
-  <style>
-    /* Globalne style */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background-color: #111;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-      transition: background-color 0.3s ease;
-    }
-
-    /* Styl dla sekcji inputa */
-    .input-section {
-      text-align: center;
-      margin-bottom: 20px;
-      width: 100%;
-      max-width: 600px;
-      animation: fadeIn 0.8s ease-in-out;
-    }
-
-    /* Styl dla textarea */
-    .input-section textarea {
-      width: 100%;
-      padding: 15px;
-      margin-bottom: 20px;
-      font-size: 1rem;
-      border: 2px solid white;
-      border-radius: 10px;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-      outline: none;
-      transition: 0.3s;
-      box-sizing: border-box;
-    }
-
-    .input-section textarea:focus {
-      background-color: rgba(255, 255, 255, 0.2);
-      border-color: #333;
-    }
-
-    /* Styl dla przycisku */
-    .input-section button {
-      padding: 15px;
-      font-size: 1rem;
-      border: 2px solid white;
-      border-radius: 10px;
-      background-color: #333;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      width: 100%;
-    }
-
-    .input-section button:hover {
-      background-color: #555;
-    }
-
-    /* Styl dla kontenera wideo */
-    .video-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 200cm; /* Odstęp 45 cm między wideo */
-      margin-top: 20px;
-      width: 100%;
-      max-width: 600px;
-    }
-
-    /* Styl dla iframe wideo */
-    .video-frame {
-      position: relative;
-      width: 100%;
-      height: 300px; /* Można zmniejszyć na telefonach */
-      max-width: 600px;
-      background: black;
-      border: 2px solid white;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-      transition: all 0.3s ease;
-    }
-
-    /* Efekt przy najechaniu na wideo */
-    .video-frame:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.9);
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* Responsywność - stylizacja dla telefonów */
-    @media (max-width: 768px) {
-      .video-frame {
-        height: 200px; /* Zmniejszenie wysokości wideo na telefonach */
-      }
-
-      .input-section {
-        max-width: 100%;
-      }
-
-      .video-container {
-        gap: 15px; /* Mniejszy odstęp między wideo na telefonach */
-      }
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Game with Ruffle</title>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <style>
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }
+        #flash-container { width: 728px; height: 546px; }
+    </style>
 </head>
 <body>
 
-  <!-- Sekcja dla URLi -->
-  <div class="input-section">
-    <textarea id="multiUrls" placeholder="🔥"></textarea>
-    <div>
-      <button onclick="loadMultiVideos()">load all</button>
+    <!-- Flash content -->
+    <div id="flash-container">
+        <ruffle-object type="application/x-shockwave-flash" id="object" data="https://twojastrona.pl/nothing.swf" width="728" height="546" tabindex="-1" style="visibility: visible;">
+            <param name="allowscriptaccess" value="always">
+            <param name="bgcolor" value="ffffff">
+            <param name="wmode" value="gpu">
+        </ruffle-object>
     </div>
-  </div>
 
-  <!-- Sekcja wideo -->
-  <div id="multiVideoContainer" class="video-container"></div>
-
-  <script>
-    const multiVideoContainer = document.getElementById('multiVideoContainer');
-    const textArea = document.getElementById('multiUrls');
-
-    // Funkcja sprawdzająca poprawność URL
-    function isValidPornhubUrl(url) {
-      const regex = /view_video\.php\?viewkey=([\w-]+)/;
-      return regex.test(url);
-    }
-
-    // Funkcja ładująca wiele wideo (bez limitu)
-    function loadMultiVideos() {
-      const urls = textArea.value.trim().split('\n');
-      multiVideoContainer.innerHTML = ''; // Czyści poprzednie wideo
-
-      // Zapisz URL w localStorage
-      localStorage.setItem('videoUrls', textArea.value);
-
-      // Maksymalna liczba URL (limit 9999)
-      if (urls.length > 9999) {
-        return;
-      }
-
-      urls.forEach((url, index) => {
-        if (isValidPornhubUrl(url)) {
-          const videoId = url.match(/view_video\.php\?viewkey=([\w-]+)/)[1];
-          const iframe = document.createElement('iframe');
-          iframe.src = `https://www.pornhub.com/embed/${videoId}?autoplay=1&mute=0`;
-          iframe.allow = 'autoplay; encrypted-media';
-          iframe.classList.add('video-frame');
-          multiVideoContainer.appendChild(iframe);
-        }
-      });
-    }
-
-    // Funkcja do ukrywania wideo
-    function hideVideos() {
-      multiVideoContainer.style.display = 'none'; // Ukrywa kontener wideo
-    }
-
-    // Funkcja do pokazywania wideo
-    function showVideos() {
-      multiVideoContainer.style.display = 'flex'; // Pokazuje kontener wideo
-    }
-
-    // Funkcja do zarządzania ukrywaniem/widocznością wideo przy edytowaniu tekstu
-    textArea.addEventListener('focus', () => {
-      hideVideos(); // Ukrywa wideo, gdy użytkownik klika na pole tekstowe
-    });
-
-    textArea.addEventListener('blur', () => {
-      showVideos(); // Pokazuje wideo, gdy użytkownik kończy edytowanie (kliknięcie poza textarea)
-    });
-
-    // Ładowanie zapisanych URLi z localStorage po załadowaniu strony
-    window.onload = () => {
-      const savedUrls = localStorage.getItem('videoUrls');
-      if (savedUrls) {
-        textArea.value = savedUrls;
-        loadMultiVideos(); // Ładowanie wideo przy wczytaniu zapisanych URLi
-      }
-    };
-
-  </script>
+    <script>
+        window.onload = function() {
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            document.getElementById('flash-container').appendChild(player);
+            player.load("https://twojastrona.pl/nothing.swf");
+        };
+    </script>
 
 </body>
 </html>
