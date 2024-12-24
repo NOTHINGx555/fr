@@ -3,31 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash Game with Ruffle</title>
+    <title>💀</title>
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
-        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }
-        #flash-container { width: 728px; height: 546px; }
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000; /* Czarny kolor tła */
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards; /* Efekt pojawiania się menu */
+        }
+
+        #menu h1 {
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: slideDown 1s ease forwards; /* Animacja wjazdu tytułu */
+        }
+
+        .game-option {
+            padding: 15px 30px;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            background: transparent;
+            cursor: pointer;
+            color: #fff;
+            text-align: center;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+
+        .game-option:hover {
+            background: #fff;
+            color: #000;
+            transform: scale(1.1); /* Powiększenie na hover */
+        }
+
+        #flash-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #000;
+            animation: fadeIn 1s ease forwards; /* Efekt pojawienia się gry */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Flash content -->
-    <div id="flash-container">
-        <ruffle-object type="application/x-shockwave-flash" id="object" data="https://twojastrona.pl/nothing.swf" width="728" height="546" tabindex="-1" style="visibility: visible;">
-            <param name="allowscriptaccess" value="always">
-            <param name="bgcolor" value="ffffff">
-            <param name="wmode" value="gpu">
-        </ruffle-object>
+    <!-- Menu with game selection -->
+    <div id="menu">
+        <h1>Choose a Game</h1>
+        <div class="game-option" onclick="startGame('https://nothingx555.github.io/fr/game1.swf')">Game 1</div>
+        <div class="game-option" onclick="startGame('https://nothingx555.github.io/fr/game2.swf')">Game 2</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game3.swf')">Game 3</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game4.swf')">Game 4</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game5.swf')">Game 5</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game6.swf')">Game 6</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game7.swf')">Game 7</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game8.swf')">Game 8</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game9.swf')">Game 9</div>
+        <div class="game-option" onclick="startGame('https://twojastrona.pl/game10.swf')">Game 10</div>
     </div>
 
+    <!-- Flash content container -->
+    <div id="flash-container"></div>
+
     <script>
-        window.onload = function() {
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
-            document.getElementById('flash-container').appendChild(player);
-            player.load("https://nothingx555.github.io/fr/nothing.swf");
-        };
+        function startGame(gameUrl) {
+            // Ukryj menu z efektem animacji
+            const menu = document.getElementById('menu');
+            menu.style.animation = 'fadeOut 1s ease forwards';
+
+            // Po zakończeniu animacji pokaż grę
+            setTimeout(() => {
+                menu.style.display = 'none';
+                const container = document.getElementById('flash-container');
+                container.style.display = 'block';
+
+                // Załaduj grę w Ruffle
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                container.appendChild(player);
+                player.style.width = "100%";
+                player.style.height = "100%";
+                player.load(gameUrl);
+            }, 1000); // Czas trwania animacji
+        }
     </script>
 
 </body>
